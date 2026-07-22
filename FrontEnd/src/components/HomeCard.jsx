@@ -6,11 +6,9 @@ import { Link } from "react-router"
 import toast from "react-hot-toast"
 
 export default function HomeCard({ task, deleteTask }) {
-    const completed = () => {
+    const completed = async () => {
+        await deleteTask(task._id)
         toast.success("Congrats")
-        setTimeout(() => {
-            deleteTask(task._id)
-        }, 500)
     }
     const deleteT = async () => {
         await deleteTask(task._id)
