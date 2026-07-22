@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+    --color-primary: oklch(62.3% 0.214 259.815);
+    --color-primary-content: rgb(0, 0, 0);
+
+    --color-background: oklch(21.4% 0.009 43.1);
+    --color-background-content: rgb(255, 255, 255);
+
+    --color-success: oklch(72% 0.219 149.579);
+
+    --color-warning: oklch(70% 0.213 47.604);
+
+    --color-error: oklch(0.577 0.245 27.325);
+
+    --animate-spin: spin 1s linear infinite;
+}
+
+button {
+    cursor: pointer;
+}
+button:disabled {
+    cursor: not-allowed;
+}
