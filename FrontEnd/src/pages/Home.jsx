@@ -45,7 +45,7 @@ export default function Home() {
                     </div>
 
                     <Link
-                        to="/Create"
+                        to="/create"
                         className="bg-primary flex gap-1 rounded-2xl px-3 py-2 text-lg duration-300 hover:scale-105"
                     >
                         <Plus strokeWidth={3} className="mt-0.5" />
