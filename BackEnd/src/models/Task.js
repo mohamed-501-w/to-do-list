@@ -1,20 +1,25 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
 //task schema for db
 const taskSchema = new Schema(
     {
-        title : {
+        title: {
             type: String,
-            required:true
+            required: true,
         },
-        description : {
+        description: {
             type: String,
-            required:true
-        }
-    },{timestamps: true}
-);
+            required: true,
+        },
+        username: {
+            type: String,
+            required: true,
+        },
+    },
+    { timestamps: true },
+)
 //task model for db
 const Task = mongoose.model("Task", taskSchema)
 
