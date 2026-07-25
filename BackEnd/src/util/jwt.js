@@ -10,5 +10,5 @@ export const makeAccessToken = async (username, date) => {
     return await jwt.sign({ username: username }, accessToken, date)
 }
 export const makeRefreshToken = async (username) => {
-    return await jwt.sign({ username: username }, accessToken)
+    return await jwt.sign({ username: username }, refreshToken)
 }

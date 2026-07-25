@@ -2,7 +2,7 @@ import JsonWebTokenError  from "jsonwebtoken"
 import User from "../models/User.js"
 import { hashing, passCompare } from "../util/hashPassword.js"
 import { makeAccessToken, makeRefreshToken } from "../util/jwt.js"
-
+import cookieParser from "cookie-parser" 
 export const register = async (req, res) => {
     try {
         const { username, password } = req.body
@@ -26,7 +26,6 @@ export const login = async (req, res) => {
     try {
         const { username, password } = req.body
         const user = await User.findOne({ username })
-        console.log(user)
         if (!user) {
             return res.status(404).json({ error: "User not found" })
         }
@@ -43,7 +42,7 @@ export const login = async (req, res) => {
         user.refreshToken = await hashing(refreshToken)
         await user.save()
 
-        res.cookie("refreshToken", refreshToken, {
+        res.cookies("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: "none",
@@ -58,29 +57,29 @@ export const login = async (req, res) => {
 
 
 export const logout = async (req, res) => {
-    const token = req.cookie.refreshToken
+    const token = req.cookies.refreshToken
     if (!token) return res.status(200).json({message: "Already logged out"})
     
     try {
         const decoded = JsonWebTokenError.verify(token, process.env.REFRESH_TOKEN)
-        const user = await User.findOne({username: decoded})
+        const user = await User.findOne({username: decoded.username})
         user.refreshToken = null
         user.save()
     } catch (error) {
         
     }
-    res.clearCookie("refreshToken")
+    res.clearCookies("refreshToken")
     res.status(200).json({message: "Logged out"})
 }
 
 export const refresh = async (req, res) => {
-    const token = req.cookie.refreshToken
+    const token = req.cookies.refreshToken
     if (!token) return res.status(401)
     
     try {
-        const decoded = JsonWebTokenError.verify(token, process.env.REFRESH_TOKEN)
+        const decoded = await JsonWebTokenError.verify(token, process.env.REFRESH_TOKEN)
         if (!decoded) return res.status(401)
-        const accessToken = makeAccessToken()
+        const accessToken = makeAccessToken(decoded.username, "15m")
         res.json({accessToken})
     } catch (error) {
         res.status(401)
