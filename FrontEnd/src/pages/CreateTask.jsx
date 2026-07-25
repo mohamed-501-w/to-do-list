@@ -37,13 +37,13 @@ export default function CreateTask() {
                 </div>
                 <form
                     action={formAction}
-                    className="mx-auto max-w-lg rounded-2xl bg-taupe-800 p-6"
+                    className="mx-auto max-w-lg rounded-2xl bg-taupe-800 p-6 text-taupe-200"
                 >
                     <h1 className="mb-4 text-xl font-bold">Create a task</h1>
                     <label className="space-y-4">
                         <h2 className="font-semibold">Title</h2>
                         <input
-                            className="w-full rounded-2xl bg-taupe-100 p-2 text-black"
+                            className="w-full rounded-2xl border-2 border-blue-500 bg-taupe-700 p-2 outline-blue-600 focus:outline"
                             type="text"
                             name="title"
                             required={true}
@@ -52,14 +52,14 @@ export default function CreateTask() {
                     <label className="my-4 flex flex-col space-y-4">
                         <h2 className="font-semibold">Description</h2>
                         <textarea
-                            className="min-h-30 rounded-2xl bg-taupe-100 p-2 text-black"
+                            className="min-h-30 rounded-2xl border-2 border-blue-500 bg-taupe-700 p-2 outline-blue-600 focus:outline"
                             name="description"
                             id=""
                             required={true}
                         ></textarea>
                     </label>
                     <button
-                        className="hover:bg-success mx-auto block rounded-2xl bg-taupe-100 px-8 py-2 font-bold text-black duration-300 disabled:cursor-not-allowed disabled:bg-taupe-100/50"
+                        className="mx-auto block rounded-2xl bg-blue-600 px-8 py-2 font-bold shadow-blue-500 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-blue-700 hover:shadow-sm disabled:cursor-not-allowed disabled:bg-taupe-100/50"
                         disabled={isSaving}
                     >
                         {isSaving ? (
