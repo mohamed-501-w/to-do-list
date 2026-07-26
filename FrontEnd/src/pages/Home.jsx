@@ -11,7 +11,6 @@ import { useAuth } from "../context/useAuth"
 export default function Home() {
     const [tasksData, setTasksData] = useState([])
     const { accessToken } = useAuth()
-    console.log("tasksData:", tasksData)
     const nav = useNavigate()
 
     useEffect(() => {
@@ -22,7 +21,6 @@ export default function Home() {
                 })
                 setTasksData(response.data)
             } catch (error) {
-                setTasksData([])
                 console.error(error)
             }
         }
