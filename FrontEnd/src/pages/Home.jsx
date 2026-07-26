@@ -22,6 +22,7 @@ export default function Home() {
                 })
                 setTasksData(response.data)
             } catch (error) {
+                setTasksData([])
                 console.error(error)
             }
         }
