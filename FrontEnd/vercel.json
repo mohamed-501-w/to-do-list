@@ -3,6 +3,10 @@
         {
             "source": "/api/:path*",
             "destination": "https://to-do-list-api-theta-six.vercel.app/api/:path*"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
         }
     ]
 }
