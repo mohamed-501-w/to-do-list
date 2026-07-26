@@ -34,9 +34,7 @@ export const login = async (req, res) => {
             return res.status(401).json({ error: "Password doesn't match" })
         }
 
-        const accessToken = await makeAccessToken(user.username, {
-            expiresIn: "15m",
-        })
+        const accessToken = await makeAccessToken(user.username)
         const refreshToken = await makeRefreshToken(user.username)
 
         user.refreshToken = await hashing(refreshToken)
@@ -74,19 +72,23 @@ export const logout = async (req, res) => {
 
 export const refresh = async (req, res) => {
     const token = req.cookies.refreshToken
-    if (!token) return res.status(401)
+    if (!token) return res.status(401).json({ message: "not authorized" })
 
     try {
         const decoded = await JsonWebTokenError.verify(
             token,
             process.env.REFRESH_TOKEN,
         )
-        if (!decoded) return res.status(401)
-        const accessToken = await makeAccessToken(decoded.username, {
-            expiresIn: "15m",
-        })
+        if (!decoded) return res.status(401).json({ message: "not authorized" })
+
+        const user = await User.findOne({ username: decoded.username })
+        if (!user) return res.status(401).json({ message: "not authorized" })
+
+        if (!(await passCompare(token, user.refreshToken)))
+            return res.status(401).json({ message: "not authorized" })
+        const accessToken = await makeAccessToken(decoded.username)
         res.json({ accessToken })
     } catch (error) {
-        res.status(401)
+        res.status(401).json({ message: "not authorized" })
     }
 }
