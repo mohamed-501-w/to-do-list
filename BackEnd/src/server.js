@@ -14,7 +14,7 @@ const PORT = process.env.PORT
 app.use(cookieParser())
 app.use(
     cors({
-        origin: "https://to-do-list-mern-md.vercel.app",
+        origin: ["https://to-do-list-mern-md.vercel.app", "http://localhost:5173"],
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,

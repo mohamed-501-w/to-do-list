@@ -62,14 +62,14 @@ export default function Home() {
                 <ListTodo size={24} className="size-[50vw] max-w-160" />
             </div>
             <div className="mx-auto max-w-7xl space-y-8 p-8 font-mono tracking-wider">
-                <div className="flex justify-between">
+                <div className="flex justify-between flex-col sm:flex-row gap-y-4">
                     <div className="drop-shadow-primary flex items-baseline gap-2 text-taupe-200 drop-shadow-sm">
                         <h1 className="text-4xl font-bold"> Tasks</h1>
                         <ListTodo size={32} />
                     </div>
-                    <div className="items flex items-center gap-4">
+                    <div className="justify-between flex   items-center gap-4 ">
                         <div className="group items relative">
-                            <button className="flex duration-300 hover:scale-110">
+                            <button className="flex duration-300 hover:scale-110 justify-between">
                                 <CircleUserRound size={40} />
                             </button>
                             <div className="pointer-events-none absolute right-1/2 bottom-0 z-10 translate-x-1/2 translate-y-[120%] scale-50 opacity-0 transition duration-200 group-focus-within:pointer-events-auto group-focus-within:scale-100 group-focus-within:opacity-100">
