@@ -1,17 +1,26 @@
-import axios from "axios"
 import { LoaderCircle, ArrowLeft } from "lucide-react"
 import { useState, useActionState } from "react"
 import { Toaster, toast } from "react-hot-toast"
 import { Link, useNavigate } from "react-router"
+import api from "../util/api"
+import { useAuth } from "../context/useAuth"
 
 export default function CreateTask() {
+    const { accessToken } = useAuth()
+
     const nav = useNavigate()
     const saveTask = async (prevState, formData) => {
         try {
-            await axios.post(import.meta.env.VITE_URL, {
-                title: formData.get("title"),
-                description: formData.get("description"),
-            })
+            await api.post(
+                "/",
+                {
+                    title: formData.get("title"),
+                    description: formData.get("description"),
+                },
+                {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                },
+            )
             toast.success("Task Created")
             nav("/")
         } catch (error) {

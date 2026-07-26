@@ -60,7 +60,7 @@ export const login = async (req, res) => {
             sameSite: "none",
             maxAge: SEVEN_DAYS_MS,
         })
-        res.json(accessToken)
+        res.json({accessToken})
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: "Internal server error", error })

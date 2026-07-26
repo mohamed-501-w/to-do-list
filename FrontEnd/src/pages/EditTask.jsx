@@ -1,10 +1,12 @@
-import axios from "axios"
 import { LoaderCircle, ArrowLeft } from "lucide-react"
 import { useState, useActionState, useEffect } from "react"
 import { Toaster, toast } from "react-hot-toast"
 import { Link, useNavigate, useParams } from "react-router"
+import api from "../util/api.js"
+import { useAuth } from "../context/useAuth.js"
 
 export default function EditTask() {
+    const { accessToken} = useAuth()
     const [task, setTask] = useState({})
     const [isLoading, setIsLoading] = useState(true)
     const nav = useNavigate()
@@ -12,8 +14,12 @@ export default function EditTask() {
 
     useEffect(() => {
         const fetch = async () => {
-            const response = await axios.get(
-                `${import.meta.env.VITE_URL}/${id}`,
+            const response = await api.get(
+                `/${id}`,
+
+                {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                },
             )
             setTask(response.data)
             setIsLoading(false)
@@ -23,10 +29,16 @@ export default function EditTask() {
 
     const saveTask = async (prevState, formData) => {
         try {
-            await axios.put(`${import.meta.env.VITE_URL}/${id}`, {
-                title: formData.get("title"),
-                description: formData.get("description"),
-            })
+            await api.put(
+                `${import.meta.env.VITE_URL}/${id}`,
+                {
+                    title: formData.get("title"),
+                    description: formData.get("description"),
+                },
+                {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                },
+            )
             toast.success("Task Updated !")
             nav("/")
         } catch (error) {

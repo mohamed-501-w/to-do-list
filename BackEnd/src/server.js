@@ -12,7 +12,12 @@ const app = e()
 const PORT = process.env.PORT
 
 app.use(cookieParser())
-app.use(cors())
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+    }),
+)
 app.use(e.json())
 app.use(ratelimiter)
 app.use("/api/users", userRouter)
