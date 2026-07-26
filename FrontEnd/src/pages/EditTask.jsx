@@ -25,7 +25,7 @@ export default function EditTask() {
             setIsLoading(false)
         }
         fetch()
-    }, [])
+    }, [accessToken])
 
     const saveTask = async (prevState, formData) => {
         try {

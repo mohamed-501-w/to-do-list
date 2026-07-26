@@ -8,7 +8,7 @@ import { useAuth } from "../context/useAuth"
 export default function Login() {
     const nav = useNavigate()
     const { setAccessToken } = useAuth()
-    
+
     const loginUser = async (prevState, formData) => {
         try {
             const response = await axios.post(
@@ -19,7 +19,6 @@ export default function Login() {
                 },
                 { withCredentials: true },
             )
-            console.log(response.data)
             setAccessToken(response.data.accessToken)
             toast.success("Welcome back")
             nav("/")

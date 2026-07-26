@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import api from "../util/api"
-import { CircleUserRound, ListChecks, ListTodo, Plus } from "lucide-react"
+import { CircleUserRound, ListTodo, Plus } from "lucide-react"
 
 import HomeCard from "../components/HomeCard"
 import ToolBar from "../components/ToolBar"
-import { Link, useNavigate  } from "react-router"
+import { Link, useNavigate } from "react-router"
 import toast, { Toaster } from "react-hot-toast"
 import { useAuth } from "../context/useAuth"
 
@@ -26,20 +26,24 @@ export default function Home() {
             }
         }
         fetch()
-    }, [])
+    }, [accessToken])
 
     const deleteTask = async (id) => {
-        await api.delete(`/${id}`, {
-            headers: { Authorization: `Bearer ${accessToken}` },
-        })
-        setTasksData((prev) => prev.filter((task) => task._id !== id))
+        try {
+            await api.delete(`/${id}`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            })
+            setTasksData((prev) => prev.filter((task) => task._id !== id))
+        } catch (error) {
+            toast.error("Please try again")
+        }
     }
 
     const { setAccessToken } = useAuth()
 
     const handleLogout = async () => {
         await api.post(
-            `/logout`,
+            `${import.meta.env.VITE_AUTH_URL}/logout`,
             {},
             { withCredentials: true },
         )
@@ -63,9 +67,9 @@ export default function Home() {
                         <h1 className="text-4xl font-bold"> Tasks</h1>
                         <ListTodo size={32} />
                     </div>
-                    <div className="flex gap-4 items items-center ">
-                        <div className="group relative items">
-                            <button className="duration-300 hover:scale-110 flex ">
+                    <div className="items flex items-center gap-4">
+                        <div className="group items relative">
+                            <button className="flex duration-300 hover:scale-110">
                                 <CircleUserRound size={40} />
                             </button>
                             <div className="pointer-events-none absolute right-1/2 bottom-0 z-10 translate-x-1/2 translate-y-[120%] scale-50 opacity-0 transition duration-200 group-focus-within:pointer-events-auto group-focus-within:scale-100 group-focus-within:opacity-100">
