@@ -82,7 +82,7 @@ export const deleteTask = async (req, res) => {
         }
 
         console.log("deleted Task successfully!")
-        res.status(200).json(task)
+        res.status(200).json({message: "deleted Task successfully!"})
     } catch (error) {
         res.status(500).json("Internal Server error!")
         console.error("Server error:", error)
