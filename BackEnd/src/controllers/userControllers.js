@@ -1,4 +1,4 @@
-import JsonWebTokenError from "jsonwebtoken"
+import jwt from "jsonwebtoken"
 import User from "../models/User.js"
 import { hashing, passCompare } from "../util/hashPassword.js"
 import { makeAccessToken, makeRefreshToken } from "../util/jwt.js"
@@ -53,11 +53,12 @@ export const login = async (req, res) => {
         user.refreshToken = await hashing(refreshToken)
         await user.save()
 
+        const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: "none",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
+            maxAge: SEVEN_DAYS_MS,
         })
         res.json(accessToken)
     } catch (error) {
@@ -71,10 +72,7 @@ export const logout = async (req, res) => {
     if (!token) return res.status(200).json({ message: "Already logged out" })
 
     try {
-        const decoded = JsonWebTokenError.verify(
-            token,
-            process.env.REFRESH_TOKEN,
-        )
+        const decoded = jwt.verify(token, process.env.REFRESH_TOKEN)
         const user = await User.findOne({ username: decoded.username })
         user.refreshToken = null
         user.save()
@@ -87,13 +85,11 @@ export const refresh = async (req, res) => {
     const token = req.cookies.refreshToken
     if (!token) return res.status(401).json({ message: "not authorized" })
 
-    const unauthorized = (res) => res.status(401).json({ message: "not authorized" })
+    const unauthorized = (res) =>
+        res.status(401).json({ message: "not authorized" })
 
     try {
-        const decoded = await JsonWebTokenError.verify(
-            token,
-            process.env.REFRESH_TOKEN,
-        )
+        const decoded = await jwt.verify(token, process.env.REFRESH_TOKEN)
         if (!decoded) return unauthorized(res)
 
         const user = await User.findOne({ username: decoded.username })

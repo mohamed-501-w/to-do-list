@@ -1,5 +1,5 @@
 import dotenv from "dotenv"
-import JsonWebTokenError from "jsonwebtoken"
+import jwt from "jsonwebtoken"
 
 const requireAuth = (req, res, next) => {
     const authHeader = req.headers.authorization
@@ -7,7 +7,7 @@ const requireAuth = (req, res, next) => {
 
     if (!token) return res.status(401).json({ message: "no token" })
     try {
-        const user = JsonWebTokenError.verify(token, process.env.ACCESS_TOKEN)
+        const user = jwt.verify(token, process.env.ACCESS_TOKEN)
         req.username = user.username
         next()
     } catch (error) {
