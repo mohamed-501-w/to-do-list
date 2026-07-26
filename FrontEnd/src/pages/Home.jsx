@@ -4,13 +4,15 @@ import { CircleUserRound, ListChecks, ListTodo, Plus } from "lucide-react"
 
 import HomeCard from "../components/HomeCard"
 import ToolBar from "../components/ToolBar"
-import { Link } from "react-router"
+import { Link, useNavigate  } from "react-router"
 import toast, { Toaster } from "react-hot-toast"
 import { useAuth } from "../context/useAuth"
 
 export default function Home() {
     const [tasksData, setTasksData] = useState([])
     const { accessToken } = useAuth()
+
+    const nav = useNavigate()
 
     useEffect(() => {
         const fetch = async () => {
@@ -37,7 +39,7 @@ export default function Home() {
 
     const handleLogout = async () => {
         await api.post(
-            `${import.meta.env.VITE_AUTH_URL}/logout`,
+            `/logout`,
             {},
             { withCredentials: true },
         )

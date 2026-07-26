@@ -6,7 +6,7 @@ import api from "../util/api.js"
 import { useAuth } from "../context/useAuth.js"
 
 export default function EditTask() {
-    const { accessToken} = useAuth()
+    const { accessToken } = useAuth()
     const [task, setTask] = useState({})
     const [isLoading, setIsLoading] = useState(true)
     const nav = useNavigate()
@@ -30,7 +30,7 @@ export default function EditTask() {
     const saveTask = async (prevState, formData) => {
         try {
             await api.put(
-                `${import.meta.env.VITE_URL}/${id}`,
+                `/${id}`,
                 {
                     title: formData.get("title"),
                     description: formData.get("description"),
