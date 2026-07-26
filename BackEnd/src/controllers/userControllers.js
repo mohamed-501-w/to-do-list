@@ -6,6 +6,13 @@ import { makeAccessToken, makeRefreshToken } from "../util/jwt.js"
 export const register = async (req, res) => {
     try {
         const { username, password } = req.body
+
+        if (!username || !password) {
+            return res
+                .status(400)
+                .json({ error: "Username and password are required" })
+        }
+
         const hashedPassword = await hashing(password)
         const user = new User({ username, password: hashedPassword })
         await user.save()
@@ -14,6 +21,7 @@ export const register = async (req, res) => {
     } catch (error) {
         //later add error for user not unique
         console.log("error->", error.message)
+        console.log("error->", error)
         if (error.message === "username is taken") {
             return res.status(409).json({ error: "username is taken" })
         }
@@ -25,8 +33,14 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { username, password } = req.body
-        const user = await User.findOne({ username })
 
+        if (!username || !password) {
+            return res
+                .status(400)
+                .json({ error: "Username and password are required" })
+        }
+
+        const user = await User.findOne({ username })
         if (!user || !(await passCompare(password, user.password))) {
             return res
                 .status(401)
@@ -73,21 +87,23 @@ export const refresh = async (req, res) => {
     const token = req.cookies.refreshToken
     if (!token) return res.status(401).json({ message: "not authorized" })
 
+    const unauthorized = (res) => res.status(401).json({ message: "not authorized" })
+
     try {
         const decoded = await JsonWebTokenError.verify(
             token,
             process.env.REFRESH_TOKEN,
         )
-        if (!decoded) return res.status(401).json({ message: "not authorized" })
+        if (!decoded) return unauthorized(res)
 
         const user = await User.findOne({ username: decoded.username })
-        if (!user) return res.status(401).json({ message: "not authorized" })
+        if (!user) return unauthorized(res)
 
         if (!(await passCompare(token, user.refreshToken)))
-            return res.status(401).json({ message: "not authorized" })
+            return unauthorized(res)
         const accessToken = await makeAccessToken(decoded.username)
         res.json({ accessToken })
     } catch (error) {
-        res.status(401).json({ message: "not authorized" })
+        unauthorized(res)
     }
 }
