@@ -26,12 +26,11 @@ export const login = async (req, res) => {
     try {
         const { username, password } = req.body
         const user = await User.findOne({ username })
-        if (!user) {
-            return res.status(404).json({ error: "User not found" })
-        }
 
-        if (!(await passCompare(password, user.password))) {
-            return res.status(401).json({ error: "Password doesn't match" })
+        if (!user || !(await passCompare(password, user.password))) {
+            return res
+                .status(401)
+                .json({ error: "Invalid username or password" })
         }
 
         const accessToken = await makeAccessToken(user.username)
