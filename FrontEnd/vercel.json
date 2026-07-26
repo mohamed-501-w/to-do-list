@@ -5,7 +5,7 @@
             "destination": "https://to-do-list-api-theta-six.vercel.app/api/:path*"
         },
         {
-            "source": "/(.*)",
+            "source": "/((?!api/.*).*)",
             "destination": "/index.html"
         }
     ]
