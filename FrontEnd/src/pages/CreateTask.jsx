@@ -12,7 +12,7 @@ export default function CreateTask() {
     const saveTask = async (prevState, formData) => {
         try {
             await api.post(
-                "/",
+                "",
                 {
                     title: formData.get("title"),
                     description: formData.get("description"),

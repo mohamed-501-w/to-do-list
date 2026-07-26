@@ -16,7 +16,7 @@ export default function Home() {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const response = await api.get("/", {
+                const response = await api.get("", {
                     headers: { Authorization: `Bearer ${accessToken}` },
                 })
                 setTasksData(response.data)
