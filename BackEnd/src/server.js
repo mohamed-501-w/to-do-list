@@ -15,6 +15,8 @@ app.use(cookieParser())
 app.use(
     cors({
         origin: "https://to-do-list-mern-md.vercel.app",
+        allowedHeaders: ["Content-Type", "Authorization"],
+        methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true,
     }),
 )
