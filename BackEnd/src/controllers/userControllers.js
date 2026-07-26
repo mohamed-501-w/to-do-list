@@ -1,8 +1,8 @@
-import JsonWebTokenError  from "jsonwebtoken"
+import JsonWebTokenError from "jsonwebtoken"
 import User from "../models/User.js"
 import { hashing, passCompare } from "../util/hashPassword.js"
 import { makeAccessToken, makeRefreshToken } from "../util/jwt.js"
-import cookieParser from "cookie-parser" 
+
 export const register = async (req, res) => {
     try {
         const { username, password } = req.body
@@ -10,7 +10,7 @@ export const register = async (req, res) => {
         const user = new User({ username, password: hashedPassword })
         await user.save()
 
-        res.status(201).json(user)
+        res.status(201).json({ message: "Account created" })
     } catch (error) {
         //later add error for user not unique
         console.log("error->", error.message)
@@ -42,7 +42,7 @@ export const login = async (req, res) => {
         user.refreshToken = await hashing(refreshToken)
         await user.save()
 
-        res.cookies("refreshToken", refreshToken, {
+        res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: "none",
@@ -55,34 +55,38 @@ export const login = async (req, res) => {
     }
 }
 
-
 export const logout = async (req, res) => {
     const token = req.cookies.refreshToken
-    if (!token) return res.status(200).json({message: "Already logged out"})
-    
+    if (!token) return res.status(200).json({ message: "Already logged out" })
+
     try {
-        const decoded = JsonWebTokenError.verify(token, process.env.REFRESH_TOKEN)
-        const user = await User.findOne({username: decoded.username})
+        const decoded = JsonWebTokenError.verify(
+            token,
+            process.env.REFRESH_TOKEN,
+        )
+        const user = await User.findOne({ username: decoded.username })
         user.refreshToken = null
         user.save()
-    } catch (error) {
-        
-    }
-    res.clearCookies("refreshToken")
-    res.status(200).json({message: "Logged out"})
+    } catch (error) {}
+    res.clearCookie("refreshToken")
+    res.status(200).json({ message: "Logged out" })
 }
 
 export const refresh = async (req, res) => {
     const token = req.cookies.refreshToken
     if (!token) return res.status(401)
-    
+
     try {
-        const decoded = await JsonWebTokenError.verify(token, process.env.REFRESH_TOKEN)
+        const decoded = await JsonWebTokenError.verify(
+            token,
+            process.env.REFRESH_TOKEN,
+        )
         if (!decoded) return res.status(401)
-        const accessToken = makeAccessToken(decoded.username, "15m")
-        res.json({accessToken})
+        const accessToken = await makeAccessToken(decoded.username, {
+            expiresIn: "15m",
+        })
+        res.json({ accessToken })
     } catch (error) {
         res.status(401)
     }
-
-}   
+}

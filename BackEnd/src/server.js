@@ -5,11 +5,13 @@ import ratelimiter from "./middleware/ratelimiter.js"
 import dotenv from "dotenv"
 import cors from "cors"
 import userRouter from "./routes/userRoutes.js"
+import cookieParser from "cookie-parser"
 dotenv.config()
 
 const app = e()
 const PORT = process.env.PORT
 
+app.use(cookieParser())
 app.use(cors())
 app.use(e.json())
 app.use(ratelimiter)
