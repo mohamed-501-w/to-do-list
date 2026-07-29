@@ -7,6 +7,7 @@ import ToolBar from "../components/ToolBar"
 import { Link, useNavigate } from "react-router"
 import toast, { Toaster } from "react-hot-toast"
 import { useAuth } from "../context/useAuth"
+import axios from "axios"
 
 export default function Home() {
     const [tasksData, setTasksData] = useState([])
@@ -41,9 +42,9 @@ export default function Home() {
     const { setAccessToken } = useAuth()
 
     const handleLogout = async () => {
-        await api.post(
+        await axios.post(
             `${import.meta.env.VITE_AUTH_URL}/logout`,
-            {},
+            
             { withCredentials: true },
         )
         setAccessToken(null)
